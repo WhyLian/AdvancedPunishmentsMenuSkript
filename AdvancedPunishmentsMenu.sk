@@ -1,0 +1,219 @@
+#by: WhyLian
+#Discord: WhyLian#4761 (RUS, EN)
+on load:
+	file "plugins\AdvancedPunishmentsMenu\config.yml" doesn't exist:
+		send "&5&lPlguin generating system files. Please change plugin language in plugins\AdvancedPunishmentsMenu\config.yml" to console
+		set skutil yaml value "SETTINGS.language" from file "plugins\AdvancedPunishmentsMenu\config.yml" to "EN"
+		set skutil yaml value "SETTINGS.prefix" from file "plugins\AdvancedPunishmentsMenu\config.yml" to "&4&l[&c&lAPM&4&l]"
+		set skutil yaml value "SETTINGS.auto-update" from file "plugins\AdvancedPunishmentsMenu\config.yml" to "true"
+	set {auto-update} to yaml value "SETTINGS.auto-update" from file "plugins\AdvancedPunishmentsMenu\config.yml"
+	set {lang} to yaml value "SETTINGS.language" from file "plugins\AdvancedPunishmentsMenu\config.yml"
+	set {prefix} to yaml value "SETTINGS.prefix" from file "plugins\AdvancedPunishmentsMenu\config.yml"
+	send "&8&l|---------------------------------------|" to console
+	send "&8&l|&eAdvancedPunishmentsMenu plugin &aenabled!&8&l|" to console
+	send "&8&l|---------------------------------------|" to console
+	set {version} to "0.4.5"
+	if {lang} is "RU":
+		set {noperm} to "&8&lУ вас нет прав!"
+		stop
+	if {lang} is "EN":
+		set {noperm} to "&8&lYou dont have permissions"
+		stop
+	set {noper} to "&8&lYou dont have permissions (&4&lERROR CONFIG! CHECK CONSOLE!)"
+	send "&4&lAPM ERROR: &c&lWORNG LANGUAGE IN CONFIG" to console
+every 10 seconds in "world":
+	if {auto-update} is "true":
+		set {last-version} to line 1 from url "https://pastebin.com/raw/7iA7s3AC"
+		if {last-version} is not {version}:
+			send "&6New update found! Updating script..." to console
+			skutil delete file "plugins/Skript/scripts/AdvancedPunishmentsMenu.sk"
+			download file from "https://pastebin.com/raw/RbQjbTzu" to file "plugins/Skript/scripts/AdvancedPunishmentsMenu.sk"
+			send "&6File loaded!" to console
+			send "&4&lSKRIPT RELOADING!!!" to console
+			make console execute command "/apm reload"
+command /apm [<text>] [<text>]:
+	permission: apm.apm
+	permission message: {noperm}
+	trigger:
+		if arg-1 is not set:
+			if {lang} is "EN":
+				send "%{prefix}%"
+				send "&6/apm config &e- Reload APM config"
+				send "&6/apm lang [EN/RU] &e- Set plugin language"
+				send "&6/apm menu &e- APM Main menu"
+				send "&6/apm update &e- Update script"
+				send "&6/apm perm &e- Permissions list"
+				send "&6/p &aor &6/punish &e- Punishments menu"
+				send "&6/p [NICK] &aor &6/punish [NICK] &e- Punishments menu for player"
+				send "&6/apm credits &e- Credits (You can remove it (line 89-96))"
+				stop
+			if {lang} is "RU":
+				send "%{prefix}%"
+				send "&6/apm config &e- Пересоздаьт конфиг"
+				send "&6/apm lang [EN/RU] &e- Установить язык плагина"
+				send "&6/apm menu &e- Главное меню APM"
+				send "&6/apm update &e- Обновить скрипт"
+				send "&6/apm perm &e- Список перемишена"
+				send "&6/p &aor &6/punish &e- Меню наказаний со списком игроков"
+				send "&6/p [NICK] &aor &6/punish [NICK] &e- Меню наказаний для опр. игрока"
+				send "&6/apm credits &e- Титры (Вы можете убрать это (строки 89-96))"
+				stop
+			send "%{prefix}% &4&lINCORRECT CONFIG LANGUAGE!"
+		if arg-1 is "reload":
+			make console execute command "/sk reload AdvancedPunishmentsMenu"
+		if arg-1 is "config":
+			if {lang} is "EN":
+				send "%{prefix}% &6&lReloading config..."
+				send "&5&lPlguin generating system files. Please change plugin language in plugins\AdvancedPunishmentsMenu\config.yml" to console
+				set skutil yaml value "SETTINGS.language" from file "plugins\AdvancedPunishmentsMenu\config.yml" to "EN"
+				set skutil yaml value "SETTINGS.prefix" from file "plugins\AdvancedPunishmentsMenu\config.yml" to "&4&l[&c&lAPM&4&l]"
+				set skutil yaml value "SETTINGS.auto-update" from file "plugins\AdvancedPunishmentsMenu\config.yml" to "true"
+				set {auto-update} to yaml value "SETTINGS.auto-update" from file "plugins\AdvancedPunishmentsMenu\config.yml"
+				send "%{prefix}% &6&lReloading complete!"
+				make console execute command "/sk reload AdvancedPunishmentsMenu"
+				stop
+			if {lang} is "RU":
+				send "%{prefix}% &6&lПересоздание конфига..."
+				send "&5&lPlguin generating system files. Please change plugin language in plugins\AdvancedPunishmentsMenu\config.yml" to console
+				set skutil yaml value "SETTINGS.language" from file "plugins\AdvancedPunishmentsMenu\config.yml" to "EN"
+				set skutil yaml value "SETTINGS.prefix" from file "plugins\AdvancedPunishmentsMenu\config.yml" to "&4&l[&c&lAPM&4&l]"
+				send "%{prefix}% &6&lПересоздание завершено!"
+				make console execute command "/sk reload AdvancedPunishmentsMenu"
+				stop
+			send "%{prefix}% &4&lINCORRECT CONFIG LANGUAGE!"
+		if arg-1 is "lang":
+			if arg-2 is not set:
+				if {lang} is "EN":
+					send "%{prefix}% &cIncorrect language!"
+					stop
+				if {lang} is "RU":
+					send "%{prefix}% &cНеверный язык!"
+					stop
+				send "%{prefix}% &4&lINCORRECT CONFIG LANGUAGE!"
+			if arg-2 is "EN":
+				send "%{prefix}% &aChanged language to english!"
+				set skutil yaml value "SETTINGS.language" from file "plugins\AdvancedPunishmentsMenu\config.yml" to "EN"
+				make console execute command "/sk reload AdvancedPunishmentsMenu"
+				stop
+			if arg-2 is "RU":
+				send "%{prefix}% &aЯзык изменён на русский!"
+				set skutil yaml value "SETTINGS.language" from file "plugins\AdvancedPunishmentsMenu\config.yml" to "RU"
+				make console execute command "/sk reload AdvancedPunishmentsMenu"
+				stop
+			send "%{prefix}% &4&lINCORRECT CONFIG LANGUAGE!"
+		if arg-1 is "credits":
+			send "&5&lCREDITS:"
+			send "&6&lAPM BY WHYLIAN"
+			send "&6Code: &eWhyLian"
+			send "&6Design: &eWhyLian"
+			send "&6Translate: &eWhyLian"
+			send "&6Tested: &eWhyLian, Konichiwa"
+			send "&4&l<3"
+		if arg-1 is "perm":
+			if {lang} is "EN":
+				send "&6&lPermissions:"
+				send "&6apm.apm &e- Manual admin command (&6/apm [arg] [arg]&e)"
+				send "&6apm.punish &e- Access to punish menu (&6/p /punish&e)"
+				stop
+			if {lang} is "RU":
+				send "&6&lПермишен:"
+				send "&6apm.apm &e- Главная админская команда (&6/apm [арг] [арг]&e)"
+				send "&6apm.punish &e- Доступ к меню наказаний (&6/p /punish&e)"
+				stop
+			send "&4&lINCORRECT CONFIG LANGUAGE!"
+		if arg-1 is "update":
+			set {last-version} to line 1 from url "https://pastebin.com/raw/7iA7s3AC"
+			if {last-version} is not {version}:
+				send "&6New update found! Updating script..."
+				skutil delete file "plugins/Skript/scripts/AdvancedPunishmentsMenu.sk"
+				download file from "https://pastebin.com/raw/RbQjbTzu" to file "plugins/Skript/scripts/AdvancedPunishmentsMenu.sk"
+				send "&6File loaded!"
+				send "&4&lSKRIPT RELOADING!!!"	
+				make console execute command "/apm reload"
+			else:
+				send "No updates found :)"
+command /punish [<text>]:
+	permission: apm.punish
+	permission message: {noperm}
+	aliases: /p
+	trigger:
+		wait 5 ticks
+		if arg-1 is not set:
+			if {lang} is "EN":
+				open chest with 1 rows named "&6&lPunishment menu" to player
+				format slot 7 of player with command block named "&5Use command /p [PLAYER]" to close then run [execute player command "apm"]
+				format slot 1 of player with paper named "&6Use player list gui" to close then run [execute player command "//plist"]
+				stop
+			if {lang} is "RU":
+				open chest with 1 rows named "&6&lМеню наказаний" to player
+				format slot 1 of player with command block named "&5Использовать команду /p [НИК]" to close then run [execute player command "apm"]
+				format slot 7 of player with paper named "&6Использовать список игроков" to close then run [execute player command "//plist"]
+				stop
+			send "&4&lCONFIG ERROR"
+		if {lang} is "EN":
+			open chest with 1 rows named "&6&lPunishment menu for &5&l%arg-1%" to player
+			set {%player%.player} to arg-1
+			format slot 1 of player with arrow named "&6&lKick player" with lore "&eThat will kick %arg-1%" to close then run [execute player command "//pkick %arg-1%"]
+			format slot 7 of player with arrow named "&6&lBan player" with lore "&eThat will ban %arg-1%" to close then run [execute player command "//pban %arg-1%"]
+			format slot 4 of player with arrow named "&6&lMute player" with lore "&eThat will mute %arg-1%" to close then run [execute player command "/mute %arg-1% 3h Chat abusing"]
+			stop
+		if {lang} is "RU":
+			open chest with 1 rows named "&6&lМеню наказаний для &5&l%arg-1%" to player
+			set {%player%.player} to arg-1
+			format slot 1 of player with arrow named "&6&lКикнуть игрока" with lore "&eОткрыть причины кика игрока %arg-1%" to close then run [execute player command "//pkick %arg-1%"]
+			format slot 7 of player with arrow named "&6&lЗабанить игрока" with lore "&eПричины бана игрока %arg-1%" to close then run [execute player command "//pban %arg-1%"]
+			format slot 4 of player with arrow named "&6&lЗамьютить игрока" with lore "&eМьют игрока %arg-1%" to close then run [execute player command "/mute %arg-1% 3h Нарушение правил чата"]
+			stop
+		send "&4&LCONFIG ERROR! WORNG LANGUAGE!"
+command //pkick [<text>]:
+	permission: amp.kick
+	trigger:
+		wait 5 ticks
+		if {lang} is "EN":
+			open chest with 1 rows named "&6&lKick reasons" to player
+			format slot 0 of player with diamond sword named "&4Cheats" to close then run [execute player command "kick %{%player%.player}% Cheating"]
+			format slot 2 of player with paper named "&9Chat abusing" to close then run [execute player command "kick %{%player%.player}% Chat abusing"]
+			format slot 4 of player with name tag named "&dIncorrect nickname" to close then run [execute player command "kick %{%player%.player}% Change your nickname!"]
+			format slot 6 of player with command block named "&5Permissions abusing" to close then run [execute player command "kick %{%player%.player}% Permission abusing"]
+			format slot 8 of player with barrier named "&8Other" to close then run [execute player command "kick %{%player%.player}% You was kicked :)"]
+			stop
+		if {lang} is "RU":
+			open chest with 1 rows named "&6&lПричины кика" to player
+			format slot 0 of player with diamond sword named "&4Читы" to close then run [execute player command "kick %{%player%.player}% Использование читов"]
+			format slot 2 of player with paper named "&9Нарушение правил чата" to close then run [execute player command "kick %{%player%.player}% Нарушение правил чата"]
+			format slot 4 of player with name tag named "&dНекорректный никнейм" to close then run [execute player command "kick %{%player%.player}% Измените ваш никнейм!"]
+			format slot 6 of player with command block named "&5Злоупотребление возможностями" to close then run [execute player command "kick %{%player%.player}% Злоупотребление возможностями"]
+			format slot 8 of player with barrier named "&8Другое" to close then run [execute player command "kick %{%player%.player}% Тебя кикнули :)"]
+			stop
+		send "&4&LCONFIG ERROR! WORNG LANGUAGE!"
+command //pban [<text>]:
+	permission: amp.ban
+	trigger:
+		wait 5 ticks
+		if {lang} is "EN":
+			open chest with 1 rows named "&6&lBan reasons" to player
+			format slot 0 of player with diamond sword named "&4Cheats" to close then run [execute player command "kick %{%player%.player}% Cheating"]
+			format slot 2 of player with paper named "&9Chat abusing" to close then run [execute player command "kick %{%player%.player}% Chat abusing"]
+			format slot 4 of player with name tag named "&dIncorrect nickname" to close then run [execute player command "kick %{%player%.player}% Change your nickname!"]
+			format slot 6 of player with command block named "&5Permissions abusing" to close then run [execute player command "kick %{%player%.player}% Permission abusing"]
+			format slot 8 of player with barrier named "&8Other" to close then run [execute player command "kick %{%player%.player}% You was banned :)"]
+			stop
+		if {lang} is "RU":
+			open chest with 1 rows named "&6&lПричины бана" to player
+			format slot 0 of player with diamond sword named "&4Читы" to close then run [execute player command "banip %{%player%.player}% Использование читов"]
+			format slot 2 of player with paper named "&9Нарушение правил чата" to close then run [execute player command "tempban %{%player%.player}% 3h Нарушение правил чата"]
+			format slot 4 of player with name tag named "&dНекорректный никнейм" to close then run [execute player command "ban %{%player%.player}% Измените ваш никнейм!"]
+			format slot 6 of player with command block named "&5Злоупотребление возможностями" to close then run [execute player command "tempban %{%player%.player}% 2d Злоупотребление возможностями"]
+			format slot 8 of player with barrier named "&8Другое" to close then run [execute player command "ban %{%player%.player}% Тебя забанили :)"]
+			stop
+		send "&4&LCONFIG ERROR! WORNG LANGUAGE!"
+command //plist:
+	permission: amp.punish
+	trigger:
+		wait 5 ticks
+		open chest with 3 rows named "%{prefix}% &6&lLIST" to player
+		set {_slot} to 0
+		loop all players:
+			if loop-value is player:
+				format slot {_slot} of player with player skull named "&6&l%loop-value%" to close then run [player command "/p %loop-value%"]
+				add 1 to {_slot}
